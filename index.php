@@ -9,7 +9,7 @@ if ($choice === 1) {
     $result = calculate();
     echo "Результат: {$result}\n";
 } elseif ($choice === 2) {
-    echo "Выберите тип конверсии (например, 'cm2in' или 'kg2lb'): ";
+    echo "Выберите тип конверсии: 'cm2in', 'kg2lb', 'm2ft', 'c2f': ";
     $type = trim(fgets(STDIN));
 
     if (empty($type)) {
@@ -28,6 +28,10 @@ function converter($type)
     $value = getNumberFromUser("Введите число: ");
 
     switch ($type) {
+        case 'c2f':
+            return $value * 9 / 5 + 32;
+        case 'm2ft':
+            return $value * 3.28084;
         case 'cm2in':
             return $value * 0.393701;
         case 'kg2lb':
@@ -47,6 +51,8 @@ function calculate()
 
 
     switch ($operation) {
+        case '**':
+            return $num1 ** $num2;
         case '+':
             return $num1 + $num2;
         case '-':
