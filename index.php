@@ -12,13 +12,8 @@ if ($choice === 1) {
 
 function calculate()
 {
-    echo "Введите первое число: ";
-    $input1 = trim(fgets(STDIN));
-    $num1 = (float)$input1;
-
-    echo "Введите второе число: ";
-    $input2 = trim(fgets(STDIN));
-    $num2 = (float)$input2;
+    $num1 = getNumberFromUser("Введите первое число: ");
+    $num2 = getNumberFromUser("Введите второе число: ");
 
     echo "Введите операцию: ";
     $operation = trim(fgets(STDIN));
@@ -39,5 +34,20 @@ function calculate()
             }
         default:
             return "Некорректная операция!";
+    }
+}
+
+function getNumberFromUser($prompt): float|int
+{
+    //code
+    while (true) {
+        echo $prompt;
+        $input = trim(fgets(STDIN));
+
+        if (is_numeric($input)) {
+            return strpos($input, '.') === false ? (int)$input : (float)$input;
+        }
+
+        echo "Ошибка: '$input' не является числом! Попробуйте еще раз.\n";
     }
 }
