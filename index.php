@@ -1,31 +1,43 @@
 <?php
 
-echo "Выберите режим: 1 - Калькулятор, 2 - Конвертер\n";
+echo colorize("====================================\n", ConsoleColor::BRIGHT_BLUE);
+echo colorize("||     КОНВЕРТЕР И КАЛЬКУЛЯТОР    ||\n", ConsoleColor::BRIGHT_MAGENTA);
+echo colorize("====================================\n", ConsoleColor::BRIGHT_BLUE);
+
+
+echo colorize("Выберите режим:\n", ConsoleColor::BRIGHT_CYAN);
+echo colorize("1 - Калькулятор\n", ConsoleColor::BRIGHT_YELLOW);
+echo colorize("2 - Конвертер\n", ConsoleColor::BRIGHT_YELLOW);
 $choice = (int)trim(fgets(STDIN));
 
-echo "Вы выбрали: " . $choice . "\n";
+echo colorize("Вы выбрали: " . $choice . "\n", ConsoleColor::BRIGHT_MAGENTA);
 
 if ($choice === 1) {
     $result = calculate();
-    echo "Результат: {$result}\n";
+    echo colorize("Результат: {$result}\n", ConsoleColor::BRIGHT_GREEN);
 } elseif ($choice === 2) {
-    echo "Выберите тип конверсии: 'cm2in', 'kg2lb', 'm2ft', 'c2f': ";
+    echo colorize("Доступные типы конверсии:\n", ConsoleColor::BRIGHT_CYAN);
+    echo colorize("'cm2in' - сантиметры в дюймы\n", ConsoleColor::BRIGHT_YELLOW);
+    echo colorize("'kg2lb' - килограммы в фунты\n", ConsoleColor::BRIGHT_YELLOW);
+    echo colorize("'m2ft'  - метры в футы\n", ConsoleColor::BRIGHT_YELLOW);
+    echo colorize("'c2f'   - цельсии в фаренгейты\n", ConsoleColor::BRIGHT_YELLOW);
+    echo colorize("Выберите тип конверсии: ", ConsoleColor::BRIGHT_GREEN);
     $type = trim(fgets(STDIN));
 
     if (empty($type)) {
-        echo "Ошибка! Тип конверсии не может быть пустым.\n";
+        echo colorize("Ошибка! Тип конверсии не может быть пустым.\n", ConsoleColor::BRIGHT_RED . ConsoleColor::BG_BLACK);
         exit;
     }
 
     $result = converter($type);
-    echo "Результат конверсии: " . round($result, 2) . "\n";
+    echo colorize("Результат конверсии: " . round($result, 2) . "\n", ConsoleColor::BRIGHT_GREEN);
 } else {
-    echo "Неверный выбор.\n";
+    echo colorize("Неверный выбор. Пожалуйста, введите 1 или 2\n", ConsoleColor::BRIGHT_RED);
 }
 
 function converter($type)
 {
-    $value = getNumberFromUser("Введите число: ");
+    $value = getNumberFromUser(colorize("Введите число: ", ConsoleColor::BRIGHT_CYAN));
 
     switch ($type) {
         case 'c2f':
@@ -43,10 +55,16 @@ function converter($type)
 
 function calculate()
 {
-    $num1 = getNumberFromUser("Введите первое число: ");
-    $num2 = getNumberFromUser("Введите второе число: ");
+    $num1 = getNumberFromUser(colorize("Введите первое число: ", ConsoleColor::BRIGHT_CYAN));
+    $num2 = getNumberFromUser(colorize("Введите второе число: ", ConsoleColor::BRIGHT_CYAN));
 
-    echo "Введите операцию: ";
+    echo colorize("Доступные операции:\n", ConsoleColor::BRIGHT_CYAN);
+    echo colorize("+  - сложение\n", ConsoleColor::BRIGHT_YELLOW);
+    echo colorize("-  - вычитание\n", ConsoleColor::BRIGHT_YELLOW);
+    echo colorize("*  - умножение\n", ConsoleColor::BRIGHT_YELLOW);
+    echo colorize("/  - деление\n", ConsoleColor::BRIGHT_YELLOW);
+    echo colorize("** - возведение в степень\n", ConsoleColor::BRIGHT_YELLOW);
+    echo colorize("Введите операцию: ", ConsoleColor::BRIGHT_GREEN);
     $operation = trim(fgets(STDIN));
 
 
@@ -63,10 +81,10 @@ function calculate()
             if ($num2 != 0) {
                 return $num1 / $num2;
             } else {
-                return "Ошибка! Деление на ноль.";
+                echo colorize("Ошибка! Деление на ноль.\n", ConsoleColor::BRIGHT_RED . ConsoleColor::BG_BLACK);
             }
         default:
-            return "Некорректная операция!";
+            echo colorize("Некорректная операция!\n", ConsoleColor::BRIGHT_RED);
     }
 }
 
@@ -80,6 +98,34 @@ function getNumberFromUser($prompt): float|int
             return strpos($input, '.') === false ? (int)$input : (float)$input;
         }
 
-        echo "Ошибка: '$input' не является числом! Попробуйте еще раз.\n";
+        echo colorize("Ошибка: '{$input}' не является числом! Попробуйте еще раз.\n", ConsoleColor::BRIGHT_RED);
     }
+}
+
+class ConsoleColor
+{
+    const GRAY = "\033[1;30m";
+    const BRIGHT_RED = "\033[1;31m";
+    const BRIGHT_GREEN = "\033[1;32m";
+    const BRIGHT_YELLOW = "\033[1;33m";
+    const BRIGHT_BLUE = "\033[1;34m";
+    const BRIGHT_MAGENTA = "\033[1;35m";
+    const BRIGHT_CYAN = "\033[1;36m";
+    const BRIGHT_WHITE = "\033[1;37m";
+
+    const BG_BLACK   = "\033[40m";
+    const BG_RED     = "\033[41m";
+    const BG_GREEN   = "\033[42m";
+    const BG_YELLOW  = "\033[43m";
+    const BG_BLUE    = "\033[44m";
+    const BG_MAGENTA = "\033[45m";
+    const BG_CYAN    = "\033[46m";
+    const BG_WHITE   = "\033[47m";
+
+    const RESET = "\033[0m";
+}
+
+function colorize($text, $color)
+{
+    return $color . $text . ConsoleColor::RESET;
 }
