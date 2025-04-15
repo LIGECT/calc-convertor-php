@@ -7,7 +7,34 @@ echo "Вы выбрали: " . $choice . "\n";
 
 if ($choice === 1) {
     $result = calculate();
-    echo "Результат: " . $result . "\n";
+    echo "Результат: {$result}\n";
+} elseif ($choice === 2) {
+    echo "Выберите тип конверсии (например, 'cm2in' или 'kg2lb'): ";
+    $type = trim(fgets(STDIN));
+
+    if (empty($type)) {
+        echo "Ошибка! Тип конверсии не может быть пустым.\n";
+        exit;
+    }
+
+    $result = converter($type);
+    echo "Результат конверсии: " . round($result, 2) . "\n";
+} else {
+    echo "Неверный выбор.\n";
+}
+
+function converter($type)
+{
+    $value = getNumberFromUser("Введите число: ");
+
+    switch ($type) {
+        case 'cm2in':
+            return $value * 0.393701;
+        case 'kg2lb':
+            return $value * 2.20462;
+        default:
+            return "Ошибка: неизвестный тип конверсии!";
+    }
 }
 
 function calculate()
@@ -39,7 +66,6 @@ function calculate()
 
 function getNumberFromUser($prompt): float|int
 {
-    //code
     while (true) {
         echo $prompt;
         $input = trim(fgets(STDIN));
